@@ -76,9 +76,9 @@ module Array_sequence : functor (_ :
     end) ->
   sig
     include Sequence
-    val make : int -> 'a -> 'a t
+    val nil_with_capacity : int -> 'a -> 'a t
     val init : 'a array -> 'a t
-    val array_get : 'a t -> int -> 'a
+    val nth_from_last : 'a t -> int -> 'a option
     val to_string : char t -> string
     val of_string : string -> char t
     val to_list : 'a t -> 'a list
@@ -88,9 +88,13 @@ module Array_sequence : functor (_ :
                      val allow_copy_on_multiple_cons : bool end) ->
 struct
   open A
-  let make i c = (0, ref 0, Array.make i c)
-  let init a = (Array.length a, ref (Array.length a), a)
-  let array_get (_, _, a) i = a.(i)
+  let nil_with_capacity i c = (0, ref 0, Array.make i c)
+  let init b =
+    let a = Array.init (Array.length b)
+              (fun i -> b.(Array.length b - 1 - i)) in
+    (Array.length a, ref (Array.length a), a)
+  let nth_from_last (len, _, a) i =
+    if 0 <= i && i < len then Some (a.(i)) else None
   let to_string (i, _, a) =
     if i <= 0 then ""
     else

@@ -81,9 +81,10 @@ module Array_sequence : functor (_ :
   sig
     include Sequence
 
-    (** Creates a new array sequence with an initial
-      capacity and a default element. *)
-    val make : int -> 'a -> 'a t
+    (** Creates a new empty array sequence with an initial capacity.
+      The second argument is only used for array initialization but the
+      sequence won't contain any elements! *)
+    val nil_with_capacity : int -> 'a -> 'a t
 
     (** Initializes the sequence with the given array. *)
     val init : 'a array -> 'a t
@@ -91,14 +92,15 @@ module Array_sequence : functor (_ :
     (** Returns the element at a certain position of
      the underlying array. The index zero points to
      the last element of the sequence. *)
-    val array_get : 'a t -> int -> 'a
+    val nth_from_last : 'a t -> int -> 'a option
 
-    (** Convert a sequence of characters to a string. *)
+    (** Convert a reversed sequence of characters to a string. *)
     val to_string : char t -> string
 
-    (** Convert a string to a sequence of characters. *)
+    (** Convert a string to a reversed sequence of characters. *)
     val of_string : string -> char t
 
+    (* TODO: test *)
     (** Convert an array sequence to a list. *)
     val to_list : 'a t -> 'a list
 
